@@ -4,6 +4,25 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from datetime import datetime, timedelta
 
+def vertical_addition(numbers):
+    # Find the width needed (widest number + space for + sign)
+    max_width = max(len(str(n)) for n in numbers)
+    total = sum(numbers)
+    total_width = len(str(total))
+    col_width = max(max_width, total_width)
+    question = "\n"
+    # Print each number, right-aligned, with + on the last one
+    for i, n in enumerate(numbers):
+        if i == len(numbers) - 1:
+            question = question + f"+ {str(n).rjust(col_width)}\n"
+        else:
+            question = question + f"   {str(n).rjust(col_width)}\n"
+
+    # Print the dividing line
+    question = question + "  " + "-" * (col_width+2) + "\n"
+    return question
+
+
 def number_to_letter(n):
     return chr((n - 1) % 26 + 65)
 
@@ -151,10 +170,11 @@ def generate_question():
               "trick7", "trick6", "trick7", "trick8", "trick9", "trick10", "trick11", "trick12", "trick13", "trick14"]
     week2 = ["trick15", "trick16", "trick17", "trick18", "trick19", "trick20", "trick21", "trick22", "trick23",
              "trick24", "trick25", "trick26", "trick27", "trick28"]
+    week3 = ["trick30"]#3, "trick30"]
     parlorTricks = ["root5", "parlor2" ]
     if parlorMode:
         tricks = tricks + parlorTricks
-    tricks = tricks + week1 + week2
+    tricks = week3
     # tricks = ["trick28"]
     trick = random.choice(tricks)
     if zerosMode:
@@ -616,6 +636,18 @@ def generate_question():
                 question = f"{num1:,g} * {num2:,g} = "
             else:
                 question = f"{num2:,g} * {num1:,g} = "
+        case "trick29":
+            numbers = []
+            for i in range(0, random.randint(3, 6)):
+                numbers.append(random.randint(6, 99))
+            answer = sum(numbers)
+            question = " + ".join(str(n) for n in numbers) + " = "
+        case "trick30":
+            numbers = []
+            for i in range(0, random.randint(3, 7)):
+                numbers.append(random.randint(100, 999))
+            answer = sum(numbers)
+            question =  vertical_addition(numbers)
     return question, answer
 
 parlorMode = False
